@@ -23,6 +23,7 @@ metadata {
         capability "Battery"
         capability "ContactSensor"
         
+        attribute "Model", "string"
         attribute "Status", "string"
         attribute "LoadPercent", "number"
 //        attribute "bCharge", "number"
@@ -73,7 +74,7 @@ def fetchAndParseData() {
 }
 
 def parseResult(String result) {
-    def fields = ["STATUS", "LOADPCT", "BCHARGE", "TIMELEFT"]
+    def fields = ["MODEL","STATUS", "LOADPCT", "BCHARGE", "TIMELEFT"]
     def parsedData = [:]
     
     fields.each { field ->
@@ -91,6 +92,7 @@ def parseResult(String result) {
 }
 
 def updateDeviceAttributes(Map parsedData) {
+    if (parsedData.MODEL) sendEvent(name: "Model", value: parsedData.MODEL)
     if (parsedData.STATUS) sendEvent(name: "Status", value: parsedData.STATUS)
     if (parsedData.LOADPCT) sendEvent(name: "LoadPercent", value: parsedData.LOADPCT as BigDecimal, unit: "%")
     if (parsedData.BCHARGE) {
